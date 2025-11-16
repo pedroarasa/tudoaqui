@@ -32,11 +32,26 @@ const possiblePaths = [
   path.resolve(__dirname, '../../frontend'),     // Render (caminho absoluto)
   path.resolve(process.cwd(), 'frontend'),       // Render (caminho absoluto do cwd)
   path.resolve(process.cwd(), '../frontend'),    // Render (caminho absoluto relativo)
+  '/opt/render/project/src/frontend',            // Render (caminho absoluto específico)
+  '/opt/render/project/frontend',                // Render (caminho absoluto raiz)
 ];
 
+// Se __dirname contém 'backend', tentar caminho relativo
+if (__dirname.includes('backend')) {
+  possiblePaths.unshift(path.join(__dirname, '../frontend'));
+}
+
 let frontendPath = null;
+console.log('🔍 Procurando frontend...');
+console.log('📂 __dirname:', __dirname);
+console.log('📂 process.cwd():', process.cwd());
+
 for (const testPath of possiblePaths) {
-  if (fs.existsSync(testPath) && fs.existsSync(path.join(testPath, 'index.html'))) {
+  const exists = fs.existsSync(testPath);
+  const hasIndex = exists && fs.existsSync(path.join(testPath, 'index.html'));
+  console.log(`   Testando: ${testPath} - ${exists ? 'existe' : 'não existe'} ${hasIndex ? '✅ tem index.html' : ''}`);
+  
+  if (exists && hasIndex) {
     frontendPath = testPath;
     console.log('✅ Caminho do frontend encontrado:', frontendPath);
     break;

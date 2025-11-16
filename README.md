@@ -1,6 +1,38 @@
 # 🧠 Jogo da Memória com GIFs do Pixabay
 
-Um jogo da memória interativo usando GIFs animados do Pixabay.
+Jogo da memória interativo usando GIFs animados do Pixabay, com backend Node.js/Express para deploy no Render.
+
+## 📁 Estrutura do Projeto
+
+```
+.
+├── frontend/           # Arquivos do frontend (HTML, CSS, JS)
+│   ├── index.html
+│   ├── styles.css
+│   └── app.js
+├── backend/            # Backend Node.js/Express
+│   ├── server.js       # Servidor que serve o frontend
+│   └── package.json
+├── package.json        # Configuração raiz
+├── render.yaml         # Configuração do Render
+└── README.md
+```
+
+## 🚀 Deploy no Render
+
+### Configuração Automática
+
+O projeto está configurado para deploy automático no Render:
+
+1. **Build Command**: `npm install`
+2. **Start Command**: `npm start`
+3. **Frontend**: Servido automaticamente de `frontend/`
+
+### Como Funciona
+
+- O `backend/server.js` serve os arquivos estáticos da pasta `frontend/`
+- O Render executa `npm start` que inicia o servidor
+- O frontend é servido automaticamente na raiz do site
 
 ## 🎮 Como Jogar
 
@@ -9,68 +41,48 @@ Um jogo da memória interativo usando GIFs animados do Pixabay.
 3. Complete o jogo encontrando todos os 8 pares
 4. Tente fazer o menor número de movimentos possível!
 
-## 🚀 Como Executar
+## 🎨 Adicionar Seus Próprios GIFs
 
-### Opção 1: Abrir diretamente
-1. Baixe os arquivos (`index.html`, `styles.css`, `app.js`)
-2. Abra o `index.html` no seu navegador
+Veja o arquivo `COMO-ADICIONAR-GIFS.md` para instruções detalhadas.
 
-### Opção 2: Servidor local
+Resumo:
+1. Acesse https://pixabay.com/pt/gifs/
+2. Escolha um GIF
+3. Copie a URL da imagem
+4. Cole no array `gifUrls` em `frontend/app.js`
+
+## 🛠️ Desenvolvimento Local
+
+### Instalar dependências
 ```bash
-# Com Python
-python -m http.server 8000
-
-# Com Node.js
-npx http-server
-
-# Com PHP
-php -S localhost:8000
+npm install
 ```
 
-Depois acesse: `http://localhost:8000`
-
-## 📁 Estrutura
-
-```
-.
-├── index.html      # Estrutura HTML do jogo
-├── styles.css      # Estilos e animações
-├── app.js          # Lógica do jogo
-└── README.md       # Este arquivo
+### Executar
+```bash
+npm start
 ```
 
-## 🎨 Recursos
+O servidor estará em: `http://localhost:3000`
 
-- ✅ GIFs animados do Pixabay
-- ✅ Animações suaves de flip
+## 📝 Funcionalidades
+
+- ✅ 16 cartas (8 pares) com GIFs animados
+- ✅ Animações de flip 3D
 - ✅ Contador de movimentos
-- ✅ Design responsivo
+- ✅ Contador de pares encontrados
 - ✅ Mensagem de vitória
-- ✅ Fallback para GIFs que não carregam
+- ✅ Fallback automático se GIF não carregar
+- ✅ Design responsivo
+- ✅ Pronto para deploy no Render
 
-## 🔧 Personalização
+## 🔧 Tecnologias
 
-Para usar seus próprios GIFs, edite o array `gifUrls` no arquivo `app.js`:
+- **Frontend**: HTML, CSS, JavaScript (Vanilla)
+- **Backend**: Node.js, Express
+- **Deploy**: Render.com
+- **GIFs**: Pixabay (gratuitos)
 
-```javascript
-const gifUrls = [
-    'URL_DO_SEU_GIF_1',
-    'URL_DO_SEU_GIF_2',
-    // ... adicione mais GIFs
-];
-```
+## 📄 Licença
 
-## 📝 Notas
-
-- Os GIFs são carregados diretamente do Pixabay
-- Se um GIF não carregar, um emoji será exibido como fallback
-- O jogo funciona offline após os GIFs serem carregados
-
-## 🎯 Funcionalidades
-
-- Grid 4x4 (16 cartas, 8 pares)
-- Sistema de pontuação
-- Animação de flip 3D
-- Feedback visual para pares encontrados
-- Botão de reset para novo jogo
-
+Este projeto usa GIFs do Pixabay que são gratuitos para uso comercial.

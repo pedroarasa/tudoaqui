@@ -25,6 +25,7 @@ app.use(express.json());
 // Servir arquivos estáticos do frontend
 // Tentar múltiplos caminhos possíveis (para funcionar em diferentes ambientes)
 const possiblePaths = [
+  path.join(__dirname, 'public'),                // Frontend copiado para backend/public (build)
   path.join(__dirname, '../frontend'),           // Desenvolvimento local (backend/frontend)
   path.join(__dirname, '../../frontend'),        // Render (se backend está em src/backend)
   path.join(process.cwd(), 'frontend'),          // Render (cwd/frontend)
@@ -46,6 +47,27 @@ console.log('🔍 Procurando frontend...');
 console.log('📂 __dirname:', __dirname);
 console.log('📂 process.cwd():', process.cwd());
 
+// Função auxiliar para listar diretórios recursivamente (limitado a 2 níveis)
+function listDirectories(dir, maxDepth = 2, currentDepth = 0) {
+  const dirs = [];
+  try {
+    if (currentDepth >= maxDepth) return dirs;
+    const items = fs.readdirSync(dir, { withFileTypes: true });
+    for (const item of items) {
+      if (item.isDirectory() && !item.name.startsWith('.') && item.name !== 'node_modules') {
+        const fullPath = path.join(dir, item.name);
+        dirs.push(fullPath);
+        if (currentDepth < maxDepth - 1) {
+          dirs.push(...listDirectories(fullPath, maxDepth, currentDepth + 1));
+        }
+      }
+    }
+  } catch (e) {
+    // Ignorar erros de leitura
+  }
+  return dirs;
+}
+
 for (const testPath of possiblePaths) {
   const exists = fs.existsSync(testPath);
   const hasIndex = exists && fs.existsSync(path.join(testPath, 'index.html'));
@@ -58,8 +80,37 @@ for (const testPath of possiblePaths) {
   }
 }
 
+// Se não encontrou, procurar recursivamente a partir do diretório atual e pai
+if (!frontendPath) {
+  console.log('🔍 Procurando recursivamente...');
+  const searchDirs = [__dirname, path.join(__dirname, '..'), process.cwd()];
+  
+  for (const searchDir of searchDirs) {
+    try {
+      if (fs.existsSync(searchDir)) {
+        const dirs = listDirectories(searchDir);
+        for (const dir of dirs) {
+          if (fs.existsSync(path.join(dir, 'index.html'))) {
+            // Verificar se parece ser o frontend (tem index.html e outros arquivos esperados)
+            const hasAppJs = fs.existsSync(path.join(dir, 'app.js')) || fs.existsSync(path.join(dir, 'styles.css'));
+            if (hasAppJs || dir.includes('frontend')) {
+              frontendPath = dir;
+              console.log('✅ Frontend encontrado recursivamente:', frontendPath);
+              break;
+            }
+          }
+        }
+        if (frontendPath) break;
+      }
+    } catch (e) {
+      console.log(`   Erro ao procurar em ${searchDir}:`, e.message);
+    }
+  }
+}
+
 if (frontendPath) {
   app.use(express.static(frontendPath));
+  console.log(`✅ Frontend configurado para servir de: ${frontendPath}`);
 } else {
   console.error('❌ Diretório frontend não encontrado!');
   console.log('📂 Diretório atual (__dirname):', __dirname);
@@ -83,6 +134,22 @@ if (frontendPath) {
     console.log('📁 Conteúdo do diretório pai:', parentContents);
   } catch (e) {
     console.log('❌ Erro ao ler diretório pai:', e.message);
+  }
+  
+  // Tentar listar estrutura completa para debug
+  try {
+    console.log('🔍 Estrutura de diretórios encontrada:');
+    const rootDir = process.cwd();
+    const allDirs = listDirectories(rootDir, 3);
+    allDirs.forEach(dir => {
+      const relativePath = path.relative(rootDir, dir);
+      const hasIndex = fs.existsSync(path.join(dir, 'index.html'));
+      if (hasIndex || dir.includes('frontend')) {
+        console.log(`   📁 ${relativePath} ${hasIndex ? '✅ tem index.html' : ''}`);
+      }
+    });
+  } catch (e) {
+    console.log('❌ Erro ao listar estrutura:', e.message);
   }
 }
 

@@ -1,24 +1,15 @@
 {
-  "name": "jogo-que-voce-ganha",
+  "name": "jogo-memoria",
   "version": "1.0.0",
-  "description": "Site de jogos online com memória e corrida de cliques",
+  "description": "Jogo da Memória com GIFs do Pixabay",
   "main": "backend/server.js",
   "scripts": {
-    "install": "cd backend && npm install",
-    "start": "cd backend && node server.js",
-    "dev": "cd backend && npm run dev"
+    "start": "cd backend && npm start",
+    "install": "cd backend && npm install"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/pedroarasa/jogoquevoceganha.git"
-  },
-  "keywords": [
-    "games",
-    "multiplayer",
-    "memory",
-    "click-race"
-  ],
-  "author": "",
-  "license": "MIT"
+  }
 }
 

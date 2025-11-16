@@ -1,113 +1,76 @@
-# 🎮 Site de Jogos Online
+# 🧠 Jogo da Memória com GIFs do Pixabay
 
-Site de jogos multiplayer com dois modos: **Jogo da Memória** e **Corrida de Cliques**.
+Um jogo da memória interativo usando GIFs animados do Pixabay.
 
-## 🚀 Funcionalidades
+## 🎮 Como Jogar
 
-- ✅ Sistema de registro e login com senha
-- ✅ Sistema de pontos (início com 3 pontos)
-- ✅ Dois jogos multiplayer em tempo real:
-  - 🧠 Jogo da Memória
-  - ⚡ Corrida de Cliques
-- ✅ Sistema de salas/matchmaking
-- ✅ Histórico de partidas
-- ✅ Sistema de saque (mínimo 50 pontos)
-- ✅ Equilíbrio de dificuldade baseado em pontos
-- ✅ Interface moderna e responsiva
+1. Clique em duas cartas para virá-las
+2. Encontre os pares de GIFs iguais
+3. Complete o jogo encontrando todos os 8 pares
+4. Tente fazer o menor número de movimentos possível!
 
-## 📁 Estrutura do Projeto
+## 🚀 Como Executar
+
+### Opção 1: Abrir diretamente
+1. Baixe os arquivos (`index.html`, `styles.css`, `app.js`)
+2. Abra o `index.html` no seu navegador
+
+### Opção 2: Servidor local
+```bash
+# Com Python
+python -m http.server 8000
+
+# Com Node.js
+npx http-server
+
+# Com PHP
+php -S localhost:8000
+```
+
+Depois acesse: `http://localhost:8000`
+
+## 📁 Estrutura
 
 ```
 .
-├── backend/
-│   ├── db/
-│   │   ├── database.js
-│   │   └── init.sql
-│   ├── routes/
-│   │   ├── auth.js
-│   │   └── games.js
-│   ├── server.js
-│   ├── package.json
-│   └── .env
-├── frontend/
-│   ├── index.html
-│   ├── styles.css
-│   ├── app.js
-│   └── images/
-└── README.md
+├── index.html      # Estrutura HTML do jogo
+├── styles.css      # Estilos e animações
+├── app.js          # Lógica do jogo
+└── README.md       # Este arquivo
 ```
 
-## 🛠️ Instalação
+## 🎨 Recursos
 
-### Backend
+- ✅ GIFs animados do Pixabay
+- ✅ Animações suaves de flip
+- ✅ Contador de movimentos
+- ✅ Design responsivo
+- ✅ Mensagem de vitória
+- ✅ Fallback para GIFs que não carregam
 
-```bash
-cd backend
-npm install
+## 🔧 Personalização
+
+Para usar seus próprios GIFs, edite o array `gifUrls` no arquivo `app.js`:
+
+```javascript
+const gifUrls = [
+    'URL_DO_SEU_GIF_1',
+    'URL_DO_SEU_GIF_2',
+    // ... adicione mais GIFs
+];
 ```
 
-Configure o arquivo `.env` com suas credenciais do banco de dados.
+## 📝 Notas
 
-### Frontend
+- Os GIFs são carregados diretamente do Pixabay
+- Se um GIF não carregar, um emoji será exibido como fallback
+- O jogo funciona offline após os GIFs serem carregados
 
-O frontend é estático e pode ser servido pelo Express ou qualquer servidor web.
+## 🎯 Funcionalidades
 
-## 🚀 Execução
-
-### Backend
-
-```bash
-cd backend
-npm start
-```
-
-O servidor rodará na porta 3000 (ou a porta definida no `.env`).
-
-### Frontend
-
-O frontend é servido automaticamente pelo Express na raiz do servidor.
-
-Acesse: `http://localhost:3000`
-
-## 🎯 Como Jogar
-
-1. **Registre-se** ou faça **login**
-2. Escolha um jogo (Memória ou Corrida de Cliques)
-3. Aguarde encontrar um oponente
-4. Jogue e ganhe pontos!
-5. Ganhar uma partida te dá os pontos do adversário
-6. Entre em uma sala para ganhar 1 ponto extra
-
-## 💰 Sistema de Pontos
-
-- **Início**: 3 pontos
-- **Entrar em sala**: +1 ponto
-- **Ganhar partida**: Recebe os pontos do adversário
-- **Perder partida**: Perde seus pontos para o adversário
-- **Saque**: Mínimo de 50 pontos
-
-## ⚖️ Equilíbrio de Dificuldade
-
-Jogadores com mais pontos enfrentam desafios maiores:
-- < 10 pontos: Dificuldade normal (1.0x)
-- 10-50 pontos: 1.2x
-- 50-100 pontos: 1.5x
-- 100-200 pontos: 1.8x
-- > 200 pontos: 2.0x
-
-## 🗄️ Banco de Dados
-
-O projeto usa PostgreSQL Neon. As tabelas são criadas automaticamente na primeira execução.
-
-## 📝 Tecnologias
-
-- **Backend**: Node.js, Express, Socket.io
-- **Frontend**: HTML, CSS, JavaScript
-- **Banco de Dados**: PostgreSQL (Neon)
-- **Autenticação**: JWT
-- **Tempo Real**: WebSocket (Socket.io)
-
-## 📄 Licença
-
-Este projeto é de código aberto.
+- Grid 4x4 (16 cartas, 8 pares)
+- Sistema de pontuação
+- Animação de flip 3D
+- Feedback visual para pares encontrados
+- Botão de reset para novo jogo
 

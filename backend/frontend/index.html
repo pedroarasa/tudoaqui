@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Memória com GIFs</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧠 Jogo da Memória</h1>
+            <div class="game-info">
+                <div class="score">
+                    <span>Movimentos: <strong id="moves">0</strong></span>
+                    <span>Pares Encontrados: <strong id="pairs">0</strong>/8</span>
+                </div>
+                <button id="reset-btn" onclick="resetGame()">🔄 Novo Jogo</button>
+            </div>
+        </header>
+
+        <div id="game-board" class="game-board"></div>
+
+        <div id="win-message" class="win-message hidden">
+            <h2>🎉 Parabéns! Você venceu!</h2>
+            <p>Você completou o jogo em <strong id="final-moves">0</strong> movimentos!</p>
+            <button onclick="resetGame()">Jogar Novamente</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+

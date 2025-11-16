@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // Servir arquivos estáticos do frontend
-const frontendPath = path.join(__dirname, '../frontend');
+const frontendPath = path.join(__dirname, 'frontend');
 app.use(express.static(frontendPath));
 
 // Rota catch-all: servir index.html para todas as rotas

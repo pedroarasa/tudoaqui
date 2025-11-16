@@ -22,134 +22,23 @@ require('dotenv').config();
 app.use(cors());
 app.use(express.json());
 
-// Servir arquivos estáticos do frontend
-// Tentar múltiplos caminhos possíveis (para funcionar em diferentes ambientes)
-const possiblePaths = [
-  path.join(__dirname, 'public'),                // Frontend copiado para backend/public (build)
-  path.join(__dirname, '../frontend'),           // Desenvolvimento local (backend/frontend)
-  path.join(__dirname, '../../frontend'),        // Render (se backend está em src/backend)
-  path.join(process.cwd(), 'frontend'),          // Render (cwd/frontend)
-  path.join(process.cwd(), '../frontend'),       // Render (cwd/../frontend)
-  path.resolve(__dirname, '../../frontend'),     // Render (caminho absoluto)
-  path.resolve(process.cwd(), 'frontend'),       // Render (caminho absoluto do cwd)
-  path.resolve(process.cwd(), '../frontend'),    // Render (caminho absoluto relativo)
-  '/opt/render/project/src/frontend',            // Render (caminho absoluto específico)
-  '/opt/render/project/frontend',                // Render (caminho absoluto raiz)
-];
+// Servir arquivos estáticos do frontend (agora está em backend/public)
+const publicPath = path.join(__dirname, 'public');
 
-// Se __dirname contém 'backend', tentar caminho relativo
-if (__dirname.includes('backend')) {
-  possiblePaths.unshift(path.join(__dirname, '../frontend'));
-}
-
-let frontendPath = null;
-console.log('🔍 Procurando frontend...');
-console.log('📂 __dirname:', __dirname);
-console.log('📂 process.cwd():', process.cwd());
-
-// Função auxiliar para listar diretórios recursivamente (limitado a 2 níveis)
-function listDirectories(dir, maxDepth = 2, currentDepth = 0) {
-  const dirs = [];
-  try {
-    if (currentDepth >= maxDepth) return dirs;
-    const items = fs.readdirSync(dir, { withFileTypes: true });
-    for (const item of items) {
-      if (item.isDirectory() && !item.name.startsWith('.') && item.name !== 'node_modules') {
-        const fullPath = path.join(dir, item.name);
-        dirs.push(fullPath);
-        if (currentDepth < maxDepth - 1) {
-          dirs.push(...listDirectories(fullPath, maxDepth, currentDepth + 1));
-        }
-      }
-    }
-  } catch (e) {
-    // Ignorar erros de leitura
-  }
-  return dirs;
-}
-
-for (const testPath of possiblePaths) {
-  const exists = fs.existsSync(testPath);
-  const hasIndex = exists && fs.existsSync(path.join(testPath, 'index.html'));
-  console.log(`   Testando: ${testPath} - ${exists ? 'existe' : 'não existe'} ${hasIndex ? '✅ tem index.html' : ''}`);
-  
-  if (exists && hasIndex) {
-    frontendPath = testPath;
-    console.log('✅ Caminho do frontend encontrado:', frontendPath);
-    break;
-  }
-}
-
-// Se não encontrou, procurar recursivamente a partir do diretório atual e pai
-if (!frontendPath) {
-  console.log('🔍 Procurando recursivamente...');
-  const searchDirs = [__dirname, path.join(__dirname, '..'), process.cwd()];
-  
-  for (const searchDir of searchDirs) {
-    try {
-      if (fs.existsSync(searchDir)) {
-        const dirs = listDirectories(searchDir);
-        for (const dir of dirs) {
-          if (fs.existsSync(path.join(dir, 'index.html'))) {
-            // Verificar se parece ser o frontend (tem index.html e outros arquivos esperados)
-            const hasAppJs = fs.existsSync(path.join(dir, 'app.js')) || fs.existsSync(path.join(dir, 'styles.css'));
-            if (hasAppJs || dir.includes('frontend')) {
-              frontendPath = dir;
-              console.log('✅ Frontend encontrado recursivamente:', frontendPath);
-              break;
-            }
-          }
-        }
-        if (frontendPath) break;
-      }
-    } catch (e) {
-      console.log(`   Erro ao procurar em ${searchDir}:`, e.message);
-    }
-  }
-}
-
-if (frontendPath) {
-  app.use(express.static(frontendPath));
-  console.log(`✅ Frontend configurado para servir de: ${frontendPath}`);
+if (fs.existsSync(publicPath) && fs.existsSync(path.join(publicPath, 'index.html'))) {
+  app.use(express.static(publicPath));
+  console.log('✅ Frontend servido de:', publicPath);
 } else {
-  console.error('❌ Diretório frontend não encontrado!');
-  console.log('📂 Diretório atual (__dirname):', __dirname);
-  console.log('📂 Diretório de trabalho (cwd):', process.cwd());
-  console.log('🔍 Tentou os seguintes caminhos:');
-  possiblePaths.forEach(p => {
-    const exists = fs.existsSync(p);
-    console.log(`   - ${p} ${exists ? '✅ existe' : '❌ não existe'}`);
-  });
+  console.error('❌ Diretório public não encontrado em:', publicPath);
+  console.log('📂 __dirname:', __dirname);
+  console.log('📂 process.cwd():', process.cwd());
   
-  // Listar conteúdo do diretório atual para debug
+  // Tentar listar o que existe
   try {
     const dirContents = fs.readdirSync(__dirname);
-    console.log('📁 Conteúdo do diretório atual:', dirContents);
+    console.log('📁 Conteúdo do diretório backend:', dirContents);
   } catch (e) {
     console.log('❌ Erro ao ler diretório:', e.message);
-  }
-  
-  try {
-    const parentContents = fs.readdirSync(path.join(__dirname, '..'));
-    console.log('📁 Conteúdo do diretório pai:', parentContents);
-  } catch (e) {
-    console.log('❌ Erro ao ler diretório pai:', e.message);
-  }
-  
-  // Tentar listar estrutura completa para debug
-  try {
-    console.log('🔍 Estrutura de diretórios encontrada:');
-    const rootDir = process.cwd();
-    const allDirs = listDirectories(rootDir, 3);
-    allDirs.forEach(dir => {
-      const relativePath = path.relative(rootDir, dir);
-      const hasIndex = fs.existsSync(path.join(dir, 'index.html'));
-      if (hasIndex || dir.includes('frontend')) {
-        console.log(`   📁 ${relativePath} ${hasIndex ? '✅ tem index.html' : ''}`);
-      }
-    });
-  } catch (e) {
-    console.log('❌ Erro ao listar estrutura:', e.message);
   }
 }
 
@@ -158,15 +47,15 @@ app.use('/api/auth', authRouter);
 app.use('/api/games', gamesRouter);
 
 // Rota catch-all: servir index.html para todas as rotas que não sejam da API
-// Isso permite que o frontend funcione com roteamento client-side
 app.get('*', (req, res, next) => {
   // Ignorar requisições para a API
   if (req.path.startsWith('/api/')) {
     return next();
   }
   
-  if (frontendPath) {
-    res.sendFile(path.join(frontendPath, 'index.html'));
+  const indexPath = path.join(__dirname, 'public', 'index.html');
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
   } else {
     res.status(500).send('Frontend não encontrado. Verifique os logs do servidor.');
   }

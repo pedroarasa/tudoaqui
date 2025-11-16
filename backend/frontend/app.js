@@ -1,18 +1,20 @@
 // GIFs do Pixabay - URLs diretas de GIFs gratuitos
-// Para adicionar seus próprios GIFs do Pixabay:
-// 1. Acesse https://pixabay.com/pt/gifs/
-// 2. Escolha um GIF
-// 3. Clique com botão direito > "Copiar endereço da imagem"
-// 4. Cole a URL aqui
+// URLs fornecidas pelo usuário do Pixabay
 const gifUrls = [
-    'https://cdn.pixabay.com/animation/2022/10/11/10/10-10-10-751_512.gif', // Gato
-    'https://cdn.pixabay.com/animation/2022/10/11/10/10-10-10-752_512.gif', // Cachorro
-    'https://cdn.pixabay.com/animation/2022/10/11/10/10-10-10-753_512.gif', // Coelho
-    'https://cdn.pixabay.com/animation/2022/10/11/10/10-10-10-754_512.gif', // Pássaro
-    'https://cdn.pixabay.com/animation/2022/10/11/10/10-10-10-755_512.gif', // Peixe
-    'https://cdn.pixabay.com/animation/2022/10/11/10/10-10-10-756_512.gif', // Borboleta
-    'https://cdn.pixabay.com/animation/2022/10/11/10/10-10-10-757_512.gif', // Estrela
-    'https://cdn.pixabay.com/animation/2022/10/11/10/10-10-10-758_512.gif', // Coração
+    'https://cdn.pixabay.com/animation/2025/06/02/00/11/00-11-22-330_512.gif',
+    'https://cdn.pixabay.com/animation/2025/04/29/23/55/23-55-02-125_512.gif',
+    'https://cdn.pixabay.com/animation/2024/07/30/00/20/00-20-15-644_512.gif',
+    'https://cdn.pixabay.com/animation/2025/05/11/01/07/01-07-40-349_512.gif',
+    'https://cdn.pixabay.com/animation/2023/05/04/16/12/16-12-04-538_512.gif',
+    'https://cdn.pixabay.com/animation/2022/10/25/12/11/12-11-02-585_512.gif',
+    'https://cdn.pixabay.com/animation/2024/01/19/00/53/00-53-56-818_512.gif',
+    'https://cdn.pixabay.com/animation/2024/11/04/11/13/11-13-55-982_512.gif',
+    'https://cdn.pixabay.com/animation/2024/10/29/00/47/00-47-41-487_512.gif',
+    'https://cdn.pixabay.com/animation/2025/04/15/01/46/01-46-47-585_512.gif',
+    'https://cdn.pixabay.com/animation/2024/11/24/21/05/21-05-33-467_512.gif',
+    'https://cdn.pixabay.com/animation/2025/01/13/17/58/17-58-14-229_512.gif',
+    'https://cdn.pixabay.com/animation/2023/05/17/16/04/16-04-26-783_512.gif',
+    'https://cdn.pixabay.com/animation/2024/12/18/01/23/01-23-42-647_512.gif',
 ];
 
 // GIFs alternativos do Giphy (fallback caso os do Pixabay não carreguem)
@@ -38,11 +40,14 @@ function initGame() {
     const gameBoard = document.getElementById('game-board');
     gameBoard.innerHTML = '';
     
+    // Usar apenas os primeiros 8 GIFs para criar 8 pares (16 cartas)
+    const gifsToUse = gifUrls.slice(0, 8);
+    
     // Criar pares de cartas
     cards = [];
-    for (let i = 0; i < 8; i++) {
-        // Usar GIFs do Pixabay ou alternativos
-        const gifUrl = gifUrls[i] || alternativeGifs[i];
+    for (let i = 0; i < gifsToUse.length; i++) {
+        // Usar GIFs do Pixabay ou alternativos como fallback
+        const gifUrl = gifsToUse[i] || alternativeGifs[i];
         cards.push({ id: i * 2, gifUrl, pairId: i });
         cards.push({ id: i * 2 + 1, gifUrl, pairId: i });
     }

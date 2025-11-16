@@ -1,0 +1,24 @@
+{
+  "name": "jogo-que-voce-ganha",
+  "version": "1.0.0",
+  "description": "Site de jogos online com memória e corrida de cliques",
+  "main": "backend/server.js",
+  "scripts": {
+    "install": "cd backend && npm install",
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pedroarasa/jogoquevoceganha.git"
+  },
+  "keywords": [
+    "games",
+    "multiplayer",
+    "memory",
+    "click-race"
+  ],
+  "author": "",
+  "license": "MIT"
+}
+
